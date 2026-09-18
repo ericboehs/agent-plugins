@@ -5,7 +5,7 @@ Copy files to iCloud Downloads for easy access on iPhone/iPad.
 ## Installation
 
 ```bash
-claude plugin install icloud-downloads --marketplace ericboehs/claude-plugins
+claude plugin install icloud-downloads --marketplace ericboehs/agent-plugins
 ```
 
 ## Usage

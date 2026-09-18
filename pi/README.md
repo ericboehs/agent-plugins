@@ -19,7 +19,7 @@ Add the extension to pi's global settings:
 ```json
 {
   "extensions": [
-    "~/Code/github.com/ericboehs/claude-plugins/pi/extensions/code-lint.ts"
+    "~/Code/github.com/ericboehs/agent-plugins/pi/extensions/code-lint.ts"
   ]
 }
 ```
@@ -44,7 +44,7 @@ Register it like any other skill directory:
 ```json
 {
   "skills": [
-    "~/Code/github.com/ericboehs/claude-plugins/plugins/pr-review/skills"
+    "~/Code/github.com/ericboehs/agent-plugins/plugins/pr-review/skills"
   ]
 }
 ```

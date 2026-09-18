@@ -5,7 +5,7 @@ Convert GitHub-flavored markdown to a PDF that looks like github.com's rendering
 ## Installation
 
 ```bash
-claude plugin install md-to-pdf --marketplace ericboehs/claude-plugins
+claude plugin install md-to-pdf --marketplace ericboehs/agent-plugins
 ```
 
 Requires `pandoc` and Google Chrome (or Chromium).

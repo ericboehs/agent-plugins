@@ -1,6 +1,6 @@
 {
-  "name": "ericboehs-claude-plugins",
-  "description": "Claude Code plugins by Eric Boehs — session analysis, workflow automation, and developer productivity tools",
+  "name": "ericboehs-agent-plugins",
+  "description": "Agent plugins by Eric Boehs — session analysis, workflow automation, and developer productivity tools",
   "owner": {
     "name": "Eric Boehs",
     "url": "https://github.com/ericboehs"

@@ -5,7 +5,7 @@ Create and update GitHub Gists with auto-generated README comments.
 ## Installation
 
 ```bash
-claude plugin install gist --marketplace ericboehs/claude-plugins
+claude plugin install gist --marketplace ericboehs/agent-plugins
 ```
 
 ## Usage

@@ -5,7 +5,7 @@ Generate and edit PowerPoint decks with [pptxgenjs](https://gitbrent.github.io/P
 ## Installation
 
 ```bash
-claude plugin install pptx --marketplace ericboehs/claude-plugins
+claude plugin install pptx --marketplace ericboehs/agent-plugins
 ```
 
 ```bash

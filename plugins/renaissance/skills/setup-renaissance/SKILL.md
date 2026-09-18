@@ -18,7 +18,7 @@ mise install fnox
 
 2. **Symlink the CLI:**
 ```bash
-ln -sf ~/Code/github.com/ericboehs/claude-plugins/plugins/renaissance/bin/renaissance ~/bin/renaissance
+ln -sf ~/Code/github.com/ericboehs/agent-plugins/plugins/renaissance/bin/renaissance ~/bin/renaissance
 ```
 
 3. **Create config directory:**

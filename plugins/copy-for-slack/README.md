@@ -5,7 +5,7 @@ Convert the last assistant message from Markdown to Slack-compatible formatting 
 ## Installation
 
 ```bash
-claude plugin install copy-for-slack --marketplace ericboehs/claude-plugins
+claude plugin install copy-for-slack --marketplace ericboehs/agent-plugins
 ```
 
 ## Usage

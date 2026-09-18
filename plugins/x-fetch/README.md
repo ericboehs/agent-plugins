@@ -6,7 +6,7 @@ every x.com URL, so this plugin routes around it in three tiers.
 ## Installation
 
 ```bash
-claude plugin install x-fetch --marketplace ericboehs/claude-plugins
+claude plugin install x-fetch --marketplace ericboehs/agent-plugins
 ```
 
 ## Usage

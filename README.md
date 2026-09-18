@@ -1,13 +1,13 @@
-# Eric's Claude Code Plugins
+# Eric's Agent Plugins
 
-A collection of Claude Code plugins for developer productivity.
+A collection of agent plugins for Claude Code and pi, for developer productivity.
 
 ## Installation
 
 Add this marketplace to Claude Code:
 
 ```bash
-claude plugin marketplace add ericboehs/claude-plugins
+claude plugin marketplace add ericboehs/agent-plugins
 ```
 
 Then install individual plugins:
