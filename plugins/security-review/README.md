@@ -20,7 +20,7 @@ skills/review-security/scripts/review-security.sh --base main  # main...HEAD
 skills/review-security/scripts/review-security.sh --dry-run    # range + applicable scanners
 ```
 
-In pi: `/skill:review-security`. Progress goes to stderr; the report path goes to stdout.
+In pi: `/skill:review-security`, or `/review-security` once [`pi/prompts`](../../pi/README.md#prompt-templates) is registered. Progress goes to stderr; the report path goes to stdout.
 
 ## Pipeline
 

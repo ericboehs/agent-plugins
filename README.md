@@ -156,7 +156,7 @@ Git workflow utilities — merge PRs, clean up branches, and handle worktrees in
 Security review of branch changes that verifies before it reports. An Anthropic-derived reviewer and deterministic scanners run as isolated agents, then an independent verifier tries to disprove every candidate. See [full documentation](plugins/security-review/README.md).
 
 **Usage:**
-- `/review-security` — Review the current branch or uncommitted changes (in pi: `/skill:review-security`)
+- `/review-security` — Review the current branch or uncommitted changes (in pi, register [`pi/prompts`](pi/README.md#prompt-templates) or use `/skill:review-security`)
 - `/review-security --base main` — Review `main...HEAD`
 - `/review-pr` — Runs it automatically as the `security` aspect when the diff touches attack surface
 

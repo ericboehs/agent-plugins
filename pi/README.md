@@ -65,3 +65,24 @@ the sibling directory, so registering the skill is only needed for
   ]
 }
 ```
+
+## Prompt templates
+
+`prompts/` holds templates that give manual-only skills a bare slash command.
+Those skills set `disable-model-invocation: true`, so they're hidden from the
+model and reachable only as `/skill:<name>`. Each template tells the agent to
+read the skill's `SKILL.md` directly and passes its arguments through.
+
+| Template | Command | Runs |
+|---|---|---|
+| `review-security.md` | `/review-security [args]` | `plugins/security-review` skill |
+
+Register the directory in pi's global settings, then `/reload`:
+
+```json
+{
+  "prompts": [
+    "~/Code/github.com/ericboehs/agent-plugins/pi/prompts"
+  ]
+}
+```
