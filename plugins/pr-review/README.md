@@ -16,7 +16,7 @@ Ask your agent to "review my changes", or run the script directly:
 
 ```bash
 skills/review-pr/scripts/fan-out.sh              # auto-detect aspects
-skills/review-pr/scripts/fan-out.sh all          # all six reviewers
+skills/review-pr/scripts/fan-out.sh all          # all seven reviewers
 skills/review-pr/scripts/fan-out.sh tests errors # explicit subset
 skills/review-pr/scripts/fan-out.sh --base main  # review main...HEAD
 skills/review-pr/scripts/fan-out.sh --dry-run    # show what would run
@@ -34,6 +34,7 @@ Progress goes to stderr; the output directory path goes to stdout. Each reviewer
 | `types` | Invariant encapsulation, expression, usefulness, enforcement | type/class/struct declarations added |
 | `comments` | Comment accuracy vs. code, comment rot | comments added |
 | `simplify` | Behavior-preserving clarity improvements | explicit request or `all` |
+| `security` | Verified vulnerabilities via the [security-review](../security-review/README.md) pipeline (reviewer + scanners + per-finding verifier) | attack-surface paths or security-sensitive calls in diff |
 
 ## Options
 
@@ -50,7 +51,8 @@ Progress goes to stderr; the output directory path goes to stdout. Each reviewer
 - **Read-only.** Children run with `--tools read,bash` and are told never to modify files. Fixes are the orchestrator's job, after you approve them.
 - **Lean children.** `-ne -ns -np` disables extensions, skills, and prompt templates in child processes — measured at ~2.2K prompt tokens instead of ~11.8K. Context files (`AGENTS.md`/`CLAUDE.md`) stay enabled so reviewers can check project guidelines.
 - **Diff range resolution:** `--base` → uncommitted changes (`git diff HEAD`) → `origin/<default>...HEAD`.
-- **Cost.** Each aspect is a full agent run. Six reviewers on a large diff is six full runs; prefer auto-detection.
+- **Cost.** Each aspect is a full agent run, and `security` adds a verifier run per candidate. Seven reviewers on a large diff is expensive; prefer auto-detection.
+- **Security delegates.** The `security` aspect runs the sibling `security-review` plugin's script, found next to this plugin (repo checkout or Claude Code plugin cache) or at `$SECURITY_REVIEW_SCRIPT`. Without it, `security` reports `FAIL` rather than silently disappearing.
 
 ## Requirements
 

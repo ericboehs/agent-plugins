@@ -1,7 +1,7 @@
 {
   "name": "pr-review",
-  "version": "1.0.0",
-  "description": "Comprehensive PR review that fans out specialized reviewers as concurrent isolated agents, then aggregates findings into a prioritized report",
+  "version": "1.1.0",
+  "description": "Comprehensive PR review that fans out specialized reviewers (code, tests, errors, types, comments, simplify, security) as concurrent isolated agents, then aggregates findings into a prioritized report",
   "author": {
     "name": "Eric Boehs",
     "url": "https://github.com/ericboehs"

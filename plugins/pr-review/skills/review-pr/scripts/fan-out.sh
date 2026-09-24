@@ -8,8 +8,12 @@
 # Usage:
 #   fan-out.sh [--base REF] [--out DIR] [--model M] [--timeout SEC] [--dry-run] [ASPECT...]
 #
-# Aspects: code tests errors types comments simplify
+# Aspects: code tests errors types comments simplify security
 #   (default: auto-detected from the diff; "all" forces every aspect)
+#
+# "security" delegates to the security-review plugin's pipeline (reviewer,
+# scanners, and per-finding verification); set SECURITY_REVIEW_SCRIPT to
+# override where it is found.
 
 set -uo pipefail
 
@@ -30,7 +34,7 @@ while [[ $# -gt 0 ]]; do
     --model)   MODEL="$2"; shift 2 ;;
     --timeout) TIMEOUT="$2"; shift 2 ;;
     --dry-run) DRY_RUN=1; shift ;;
-    -h|--help) sed -n '2,12p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    -h|--help) sed -n '2,16p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
     -*)        echo "Unknown option: $1" >&2; exit 2 ;;
     *)         ASPECTS+=("$1"); shift ;;
   esac
@@ -77,8 +81,12 @@ if [[ ${#ASPECTS[@]} -eq 0 || " ${ASPECTS[*]} " == *" auto "* ]]; then
     && ASPECTS+=(types)
   grep -qiE '^\+\s*(//|#|/\*|\*|"""|--)' <<<"$DIFF_BODY" \
     && ASPECTS+=(comments)
+  # security: attack-surface paths, or security-sensitive calls on added lines
+  { grep -qiE '(^|/)(controllers?|routes?|auth[a-z]*|sessions?|polic(y|ies)|middlewares?|initializers|webhooks?|uploads?)/|(^|/)\.github/workflows/|(^|/)(Dockerfile|Gemfile\.lock|package-lock\.json|yarn\.lock|pnpm-lock\.yaml)$|(^|/)config/routes\.rb$|\.(erb|haml|slim|tf)$' <<<"$CHANGED" \
+    || grep -qiE '^\+.*(passw|secret|token|api[_-]?key|credential|auth|session|cookie|csrf|jwt|oauth|crypt|cipher|hmac|signature|sql|exec|system\(|spawn|popen|subprocess|child_process|eval\(|html_safe|raw\(|innerhtml|dangerouslysetinnerhtml|v-html|permit|redirect|send_file|constantize|marshal|yaml\.|pickle|deserializ|upload|net::http|faraday|httparty|urlopen|requests\.(get|post)|fetch\(|cors|verify_mode|ssl)' <<<"$DIFF_BODY"; } \
+    && ASPECTS+=(security)
 elif [[ " ${ASPECTS[*]} " == *" all "* ]]; then
-  ASPECTS=(code tests errors types comments simplify)
+  ASPECTS=(code tests errors types comments simplify security)
 fi
 
 # de-duplicate, preserving order
@@ -104,7 +112,54 @@ fi
 # ------------------------------------------------------------------ fan out
 declare -a PIDS=() NAMES=()
 
+# Locate security-review's pipeline: explicit override, sibling plugin in this
+# repo (pi, local checkouts), or sibling plugin in Claude Code's plugin cache
+# (<cache>/<marketplace>/<plugin>/<version>/...), newest version last.
+find_security_review() {
+  local c found=""
+  for c in \
+    "${SECURITY_REVIEW_SCRIPT:-}" \
+    "$SCRIPT_DIR/../../../../security-review/skills/review-security/scripts/review-security.sh" \
+    "$SCRIPT_DIR"/../../../../../security-review/*/skills/review-security/scripts/review-security.sh
+  do
+    if [[ -n "$c" && -x "$c" ]]; then
+      found="$c"
+      [[ "$c" == "${SECURITY_REVIEW_SCRIPT:-}" ]] && break
+    fi
+  done
+  [[ -n "$found" ]] && echo "$found"
+}
+
+# The security aspect is a pipeline, not a single prompt. It writes its own
+# report, which becomes $OUT/security.md like any other reviewer's output.
+run_security() {
+  local script
+  if ! script="$(find_security_review)"; then
+    echo "security-review plugin not found; install it or set SECURITY_REVIEW_SCRIPT" >"$OUT/security.err"
+    echo 127 >"$OUT/security.status"
+    return
+  fi
+  # shellcheck disable=SC2086
+  "$script" --range "$DIFF_ARGS" --out "$OUT/security" --timeout "$TIMEOUT" \
+    ${MODEL:+--model "$MODEL"} >/dev/null 2>"$OUT/security.err"
+  local status=$?
+  # Exit 1 means the LLM reviewer failed but scanners and verification still
+  # produced a report, whose Coverage section says so. Keep it.
+  if [[ -f "$OUT/security/report.md" ]]; then
+    cp "$OUT/security/report.md" "$OUT/security.md"
+    [[ "$status" == "1" ]] && status=0
+  fi
+  echo "$status" >"$OUT/security.status"
+}
+
 for aspect in "${ASPECTS[@]}"; do
+  if [[ "$aspect" == "security" ]]; then
+    run_security &
+    PIDS+=($!)
+    NAMES+=("$aspect")
+    continue
+  fi
+
   prompt_file="$REVIEWERS_DIR/$aspect.md"
   if [[ ! -f "$prompt_file" ]]; then
     echo "warn: no reviewer named '$aspect' (skipping)" >&2
@@ -161,7 +216,7 @@ echo >&2
 FAILED=0
 for aspect in "${NAMES[@]}"; do
   status="$(cat "$OUT/$aspect.status" 2>/dev/null || echo '?')"
-  size="$(wc -c <"$OUT/$aspect.md" 2>/dev/null | tr -d ' ')"
+  size="$( { wc -c <"$OUT/$aspect.md" | tr -d ' '; } 2>/dev/null)"
   if [[ "$status" == "0" && "${size:-0}" -gt 0 ]]; then
     printf 'ok    %-9s %6s bytes  %s\n' "$aspect" "$size" "$OUT/$aspect.md" >&2
   else
