@@ -75,6 +75,7 @@ read the skill's `SKILL.md` directly and passes its arguments through.
 
 | Template | Command | Runs |
 |---|---|---|
+| `review-pr.md` | `/review-pr [aspects...] [--base REF]` | `plugins/pr-review` skill |
 | `review-security.md` | `/review-security [args]` | `plugins/security-review` skill |
 
 Register the directory in pi's global settings, then `/reload`:

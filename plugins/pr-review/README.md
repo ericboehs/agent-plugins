@@ -12,7 +12,7 @@ The reviewer prompts (~13KB total) live in separate files that only the *childre
 
 ## Usage
 
-Ask your agent to "review my changes", or run the script directly:
+Run `/review-pr` (in pi: `/skill:review-pr`, or `/review-pr` once [`pi/prompts`](../../pi/README.md#prompt-templates) is registered), or run the script directly:
 
 ```bash
 skills/review-pr/scripts/fan-out.sh              # auto-detect aspects
