@@ -48,3 +48,20 @@ Register it like any other skill directory:
   ]
 }
 ```
+
+## security-review
+
+`plugins/security-review` uses the same subprocess pattern in two stages: an
+LLM reviewer runs alongside deterministic scanners, then each candidate gets
+its own verifier child (`--no-session`, so dozens of verifiers don't clutter
+session history). `pr-review`'s `security` aspect calls the same script from
+the sibling directory, so registering the skill is only needed for
+`/skill:review-security`:
+
+```json
+{
+  "skills": [
+    "~/Code/github.com/ericboehs/agent-plugins/plugins/security-review/skills"
+  ]
+}
+```

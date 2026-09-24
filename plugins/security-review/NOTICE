@@ -1,0 +1,65 @@
+security-review
+Copyright 2026 Eric Boehs
+
+--------------------------------------------------------------------------
+Anthropic claude-code-security-review (MIT)
+--------------------------------------------------------------------------
+
+skills/review-security/prompts/reviewer.md and
+skills/review-security/prompts/false-positives.md are derived from
+.claude/commands/security-review.md in
+https://github.com/anthropics/claude-code-security-review (commit c19afa7).
+The candidate -> parallel per-finding verification -> confidence >= 8
+pipeline follows that command's three-step analysis.
+
+Modifications from the original:
+  - Split into a reviewer prompt and a shared false-positive prompt so the
+    same exclusions and precedents reach the reviewer and every verifier.
+  - Replaced Claude Code `!`command`` context injection and sub-task steps
+    with instructions for standalone read-only agents run by a script.
+  - Added SSRF, IDOR, and mass-assignment categories, a prompt-injection
+    rule, a required parseable heading format, and Source/Sink/Confidence
+    fields per finding.
+  - Added a pre-existing-issue exclusion, and carved dependency-audit hits
+    for dependencies this diff adds out of the outdated-library exclusion.
+  - Fixed typos and duplicated list numbering.
+
+MIT License
+
+Copyright (c) 2025 Anthropic
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+--------------------------------------------------------------------------
+Sentry security-review skill (Apache-2.0)
+--------------------------------------------------------------------------
+
+The trust-model table in skills/review-security/prompts/false-positives.md
+(attacker-controlled vs. server-controlled sources) is adapted from the
+security-review skill in https://github.com/getsentry/skills, licensed under
+the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+
+--------------------------------------------------------------------------
+Original work
+--------------------------------------------------------------------------
+
+skills/review-security/prompts/verifier.md, skills/review-security/prompts/
+rails.md, and the scripts are original to this plugin. The Rails guidance
+draws on Brakeman's warning categories (https://brakemanscanner.org/docs/
+warning_types/) and the Rails Security Guide.

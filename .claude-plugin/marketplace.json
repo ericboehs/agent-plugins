@@ -291,6 +291,17 @@
       },
       "source": "./plugins/pr-review",
       "category": "development"
+    },
+    {
+      "name": "security-review",
+      "version": "1.0.0",
+      "description": "Security review of branch changes: an Anthropic-derived reviewer and deterministic scanners (gitleaks, brakeman, zizmor, bundle-audit, npm audit) run as isolated agents, then an independent verifier tries to disprove every candidate before it is reported",
+      "author": {
+        "name": "Eric Boehs",
+        "url": "https://github.com/ericboehs"
+      },
+      "source": "./plugins/security-review",
+      "category": "security"
     }
   ]
 }

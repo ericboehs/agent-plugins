@@ -151,6 +151,17 @@ Git workflow utilities — merge PRs, clean up branches, and handle worktrees in
 - `/merge-and-cleanup` — Squash merge the current branch's PR, delete the branch, switch to the default branch, pull, and clean up worktree if applicable
 - `/commit-and-push` — Stage all changes, commit with a semantic message, and push to origin
 
+### security-review
+
+Security review of branch changes that verifies before it reports. An Anthropic-derived reviewer and deterministic scanners run as isolated agents, then an independent verifier tries to disprove every candidate. See [full documentation](plugins/security-review/README.md).
+
+**Usage:**
+- `/review-security` — Review the current branch or uncommitted changes (in pi: `/skill:review-security`)
+- `/review-security --base main` — Review `main...HEAD`
+- `/review-pr` — Runs it automatically as the `security` aspect when the diff touches attack surface
+
+**Scanners (when installed and applicable):** gitleaks, brakeman, zizmor, semgrep, bundle-audit, npm audit — filtered to lines the diff adds
+
 ## Contributing
 
 Each plugin lives in `plugins/<plugin-name>/` and needs:
